@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment System</title>
+</head>
+<body>
+
+<h1>Payment System</h1>
+
+<input type="number" id="amount" placeholder="Amount">
+
+<button onclick="pay()">Pay Now</button>
+
+<h2>Transactions</h2>
+
+<ul id="list"></ul>
+
+<script>
+
+async function pay() {
+
+    const amount =
+        document.getElementById('amount').value;
+
+    await fetch('/api/payment', {
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({amount})
+    });
+
+    loadPayments();
+}
+
+async function loadPayments() {
+
+    const response =
+        await fetch('/api/payments');
+
+    const data =
+        await response.json();
+
+    document.getElementById('list').innerHTML =
+        data.map(p =>
+        `<li>ID:${p.id} - ₹${p.amount} - ${p.status}</li>`
+        ).join('');
+}
+
+loadPayments();
+
+</script>
+
+</body>
+</html>
